@@ -9,6 +9,7 @@ var container = d3.selectAll('body').append('svg')
 
 
 // function to fill asteroid data array
+var balls = 15;
 var generateArray = function (n) {
   var generatedArray = [];
   for (var i = 0; i < n; i++) {
@@ -18,7 +19,7 @@ var generateArray = function (n) {
 }
 
 var imgs = container.selectAll("image")
-  .data(generateArray(15));
+  .data(generateArray(balls));
   imgs.enter()
   .append("svg:image")
   .attr("class", "enemy")
@@ -61,15 +62,22 @@ function update(data) {
 }
 update(imgs);
 
+var nonCollisions = 0;
+var collisions = 0;
+var hscore = 0;
+
 setInterval(function() {
   update(imgs);
 }, 1000);
 
-setInterval(function() {
-  checkCollisions();
-}, 100)
 
-var collided = 0;
+setInterval(function() {
+  nonCollisions++;
+  d3.selectAll('.current').select('span').text(nonCollisions);
+  checkCollisions();
+}, 100);
+
+
 var checkCollisions = function(){
   var Cx = circle.attr("cx");
   var Cy = circle.attr("cy");
@@ -77,19 +85,19 @@ var checkCollisions = function(){
   for( var i = 0; i < imgs[0].length; i++ ){
     var Ex = imgs[0][i].x.animVal.value + 10;
     var Ey = imgs[0][i].y.animVal.value + 10;
-    //console.log(Cx, Cy);
-    //console.log(Ex, Ey);
-
-    //calculate distance between enemy and circle
     var distance = Math.sqrt(Math.pow(Cx - Ex, 2) + Math.pow(Cy - Ey, 2));
-    // if the distance between circle and enemy is < 20 px
+
     if (distance < 20) {
-    //   they have collided. terrible
-    //   if score > highscore
-    //     set highscore to score
-    //   set score back to zero
-    //   incriment collisions
-    collided += 1;
+      var highscore = d3.selectAll('.high').select('span');
+      var current = d3.selectAll('.current').select('span');
+        if( nonCollisions > hscore ) {
+          hscore = nonCollisions;
+          highscore.text(nonCollisions);
+        }
+      collisions++;
+      d3.selectAll('.collisions').select('span').text(collisions);
+      current.text('0');
+      nonCollisions = 0;
     }
   }
 };
