@@ -65,6 +65,7 @@ update(imgs);
 var nonCollisions = 0;
 var collisions = 0;
 var hscore = 0;
+var collided = false;
 
 setInterval(function() {
   update(imgs);
@@ -81,7 +82,6 @@ setInterval(function() {
 var checkCollisions = function(){
   var Cx = circle.attr("cx");
   var Cy = circle.attr("cy");
-
   for( var i = 0; i < imgs[0].length; i++ ){
     var Ex = imgs[0][i].x.animVal.value + 10;
     var Ey = imgs[0][i].y.animVal.value + 10;
@@ -94,10 +94,20 @@ var checkCollisions = function(){
           hscore = nonCollisions;
           highscore.text(nonCollisions);
         }
-      collisions++;
-      d3.selectAll('.collisions').select('span').text(collisions);
-      current.text('0');
+      collided = true;
       nonCollisions = 0;
     }
   }
+  if( collided ){
+    collisions++;
+    d3.selectAll('.collisions').select('span').text(collisions);
+    current.text('0');
+    collided = false;
+  }
+
 };
+
+// change t/f to something michael likes
+// change enemies to spinning something
+//fix border bug
+//then we git dance and partayyy!
