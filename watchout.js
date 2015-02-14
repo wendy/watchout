@@ -2,6 +2,8 @@
 var width = 800;
 var height = 600;
 
+var t0 = Date.now();
+
 var container = d3.selectAll('body').append('svg')
   .attr('width', width)
   .attr('height', height)
@@ -9,7 +11,7 @@ var container = d3.selectAll('body').append('svg')
 
 
 // function to fill asteroid data array
-var balls = 15;
+var balls = 15; // ºuº
 var generateArray = function (n) {
   var generatedArray = [];
   for (var i = 0; i < n; i++) {
@@ -18,18 +20,36 @@ var generateArray = function (n) {
   return generatedArray
 }
 
-var imgs = container.selectAll("image")
+// enemy attributes
+var imgs = d3.select('svg').selectAll("image")
   .data(generateArray(balls));
-  imgs.enter()
+
+imgs.enter()
   .append("svg:image")
-  .attr("class", "enemy")
-  .attr("xlink:href", "asteroid.png")
+  .attr("class", "enemy") //this applies to the whole group
+  .attr("xlink:href", "shuriken.png")
   // .attr("x", function(d){ return d * 30})
   .attr("x", "0")
   .attr("y", "0") // put in circle - sin and cos
   .attr("width", "20")
   .attr("height", "20");
+/*
+// d3 rotation of enemies
+//debugger;
+//console.log(d3.selectAll('g.imgs').attr('transform'));
+container.append("g")
+  .attr("transform", "translate(" + 400 + "," + 300 + ")")
+  .selectAll('g.enemy').data(imgs).enter().append('g')
+  .attr('class', 'enemy');
 
+d3.timer(function () {
+  var delta = (Date.now() - t0);
+  container.selectAll('.enemy').attr('transform', function(d) {
+    return "rotate(" + 90 + Date.now() - t0+ ")";
+  });
+});
+
+*/
 // drag effect for user's circle piece
 var drag = d3.behavior.drag()
   .on('dragstart', function () { circle.style('fill', 'pink');})
@@ -38,11 +58,11 @@ var drag = d3.behavior.drag()
   .on('dragend', function() {circle.style('fill', 'black');});
 
 // declare user's circle piece
-var circle = container.selectAll('.draggableCircle')
+var circle = container.selectAll('.hero')
   .data([{ x: (width/2), y: (height/2), r: 10}])
   .enter()
   .append('svg:circle')
-  .attr('class', 'draggableCircle')
+  .attr('class', 'hero')
   .attr('cx', function(d) {return d.x;})
   .attr('cy', function(d) {return d.y;})
   .attr('r', function(d) {return d.r;})
