@@ -31,8 +31,8 @@ imgs.enter()
   // .attr("x", function(d){ return d * 30})
   .attr("x", "0")
   .attr("y", "0") // put in circle - sin and cos
-  .attr("width", "20")
-  .attr("height", "20");
+  .attr("width", "40")
+  .attr("height", "40");
 /*
 // d3 rotation of enemies
 //debugger;
@@ -53,9 +53,10 @@ d3.timer(function () {
 // drag effect for user's circle piece
 var drag = d3.behavior.drag()
   .on('dragstart', function () { circle.style('fill', 'pink');})
-  .on('drag', function() { circle.attr('cx', d3.event.x)
-      .attr('cy', d3.event.y);})
+  .on('drag', function() { if(d3.event.x > 10 && d3.event.x < 790 && d3.event.y > 10 && d3.event.y < 590) { circle.attr('cx', d3.event.x)
+      .attr('cy', d3.event.y);}})
   .on('dragend', function() {circle.style('fill', 'black');});
+
 
 // declare user's circle piece
 var circle = container.selectAll('.hero')
@@ -71,10 +72,8 @@ var circle = container.selectAll('.hero')
 
 
 function update(data) {
-/*  var enemies = container.selectAll('imgs')
-    .data(data, function(d) { return d; })
-*/
-  //UPDATE ENEMIES POSITION
+  // UPDATE ENEMIES POSITION
+  // set position to a random location within the container
   data.transition().duration(1000)
     .attr("x", function(d) { return Math.floor(Math.random() * width);})
     .attr("y", function(d) { return Math.floor(Math.random() * height);})
@@ -103,11 +102,11 @@ var checkCollisions = function(){
   var Cx = circle.attr("cx");
   var Cy = circle.attr("cy");
   for( var i = 0; i < imgs[0].length; i++ ){
-    var Ex = imgs[0][i].x.animVal.value + 10;
-    var Ey = imgs[0][i].y.animVal.value + 10;
+    var Ex = imgs[0][i].x.animVal.value + 20;
+    var Ey = imgs[0][i].y.animVal.value + 20;
     var distance = Math.sqrt(Math.pow(Cx - Ex, 2) + Math.pow(Cy - Ey, 2));
 
-    if (distance < 20) {
+    if (distance < 30) {
       var highscore = d3.selectAll('.high').select('span');
       var current = d3.selectAll('.current').select('span');
         if( nonCollisions > hscore ) {
